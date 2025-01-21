@@ -5,6 +5,7 @@ import streamlit as st
 import os
 import google.generativeai as genai
 from PIL import Image
+from typing import Optional
 
 # Configure the API key
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -12,7 +13,7 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 # Load the Gemini model
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-def get_gemini_response(input, image):
+def get_gemini_response(input: str, image: Optional[Image.Image]) -> str:
     if input != "":
         response = model.generate_content([input, image])
     else:
@@ -24,11 +25,11 @@ st.set_page_config(page_title="Gemini Image Demo")
 st.header("Gemini Application")
 
 # Text input
-input_prompt = st.text_input("Input prompt:", key="input")
+input_prompt: str = st.text_input("Input prompt:", key="input")
 
 # Image uploader
 uploaded_image = st.file_uploader("Choose an image...", type=['jpg', 'jpeg', 'png'])
-img = ""
+img: Optional[Image.Image] = None
 
 if uploaded_image is not None:
     st.success(f"Image '{uploaded_image.name}' uploaded successfully!")
